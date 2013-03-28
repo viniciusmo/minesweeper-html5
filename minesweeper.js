@@ -1,55 +1,84 @@
-var LEVEL_CHOOSE = {
-	EASY : 0,
-	MEDIUM : 1,
-	HARD : 2
+function CollectionUtils(){}
+CollectionUtils.shuffle  =  function (o){
+	for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+		return o;
 }
 
-function Level{
 
-	var COLS = 20;
+function Block (){
+	this.clickable;
+	this.position;
+	this.bomb;
+	this.html;
+}
+
+function Game (percentageOfBombs) {
+	var SOURCE_IMAGES = 'images/'
+	var COLS  = 20;
 	var LINES = 20;
+	this.gameBoard =  new Array();
+	this.percentageOfBombs = percentageOfBombs;
 
-	this.makeMatrizGame =  function (){
-		var matriz = new Array(LINES);
-		for (var i = 0; i < LINES; i++) {
-			matriz[i] = new Array(COLS);
-		}
-		return matriz;
+	this.createBoardGame =  function (){
+		populategameBoard();
+		showMatrizGame();
 	}
-}
 
-LevelEasy.prototype =  new Level();
-LevelEasy.prototype.shuffleMatriz =  function (){
+	var populategameBoard =  function (){
+		var totalBombs = 0;
+		this.gameBoard = new Array(LINES);
+		for (var i = 0 ; i  < LINES * COLS; i++) {
+			var block  = new Block();
+			block.position = i;
+			
+			totalBombs++;
+			this.gameBoard[i] = (alreadyGotTheTotalBombs(totalBombs)) ? 0 : 1;
+		}
+		CollectionUtils.shuffle(this.gameBoard);
+	}
 
-}
-
-
-LevelMedium.prototype =  new Level();
-LevelMedium.prototype.shuffleMatriz =  function (){
-
-}
-
-LevelHard.prototype =  new Level();
-LevelHard.prototype.shuffleMatriz =  function (){
-
-}
-
-
-
-function LevelFactory (level) {
-
-	this.makeLevel =  function (){
-		switch (level){
-			case LEVEL_CHOOSE.EASY:
-
-
-			break;
-			case LEVEL_CHOOSE.MEDIUM:
-
-			break;
-			case LEVEL_CHOOSE.HARD:
-
-			break;
+	var showMatrizGame =  function (){
+		var countBreak = 0;
+		for (var i = 0 ; i  < LINES * COLS; i++) {
+			createImageElementAndAddOnclick(i);
+			countBreak++;
+			if (countBreak == COLS){
+				addBreakLine();
+				countBreak = 0;
+			}
 		}
 	}
+
+	var  alreadyGotTheTotalBombs =  function (totalBombs){
+		return totalBombs >= getTotalsBombs();
+	}
+
+	var  getTotalsBombs =  function (){
+		return percentageOfBombs * (COLS * LINES)
+	}
+
+	var addBreakLine = function (){
+		var gameDiv = document.getElementById('game');
+		var br = document.createElement('br');
+		gameDiv.appendChild(br);
+	}
+
+	var createImageElementAndAddOnclick =  function (i){
+		var gameDiv = document.getElementById('game');
+		var divBoard = document.createElement('img');
+		divBoard.setAttribute('src',SOURCE_IMAGES+'init.jpg');
+		gameDiv.appendChild(divBoard);
+		divBoard.onclick= function(element,i) {
+			return function() {
+				if (gameBoard[i] == 0){
+					element.setAttribute('src',SOURCE_IMAGES+'clear.png');
+				}else{
+					element.setAttribute('src',SOURCE_IMAGES+'bomb.jpg');
+				}
+			}
+		}(divBoard,i);
+	}
+
 }
+
+new Game(0.15).createBoardGame();
