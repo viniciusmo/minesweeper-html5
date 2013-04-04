@@ -19,12 +19,15 @@ function Block (clickable,position,bomb){
 	}
 
 	this.changeImage =  function (){
-		if (bomb){
-			this.html.setAttribute('src',SOURCE_IMAGES+'bomb.jpg');
-		}else if (this.totalBombs > 0){
-			this.html.setAttribute('src',SOURCE_IMAGES+this.totalBombs+'.png');
-		}else{
-			this.html.setAttribute('src',SOURCE_IMAGES+'clear.png');
+		if (clickable){
+			clickable = false;
+			if (bomb){
+				this.html.setAttribute('src',SOURCE_IMAGES+'bomb.jpg');
+			}else if (this.totalBombs > 0){
+				this.html.setAttribute('src',SOURCE_IMAGES+this.totalBombs+'.png');
+			}else{
+				this.html.setAttribute('src',SOURCE_IMAGES+'clear.png');
+			}
 		}
 	}
 }
@@ -70,8 +73,8 @@ function CreatorGame (percentageOfBombs){
 		for (var i = 0; i < LINES; i++) {
 			boardGame[i] = new Array();
 			for (var j = 0; j < COLS; j++) {
-				 var block  = new Block (false,new Position(i,j),this.mat[countBoardItem++])
-				 boardGame[i][j] = block;
+				var block  = new Block (true,new Position(i,j),this.mat[countBoardItem++])
+				boardGame[i][j] = block;
 			}
 		}
 		return boardGame;
@@ -80,8 +83,8 @@ function CreatorGame (percentageOfBombs){
 	var countBombsAroundBlocks = function (boardGame){
 		for (var i = 0; i < LINES ; i++) {
 			for (var j = 0; j < COLS; j++) {
-				 var block = boardGame[i][j];
-				 block.bombs ( countBombsAroundOfBlock(boardGame,i,j) );
+				var block = boardGame[i][j];
+				block.bombs ( countBombsAroundOfBlock(boardGame,i,j) );
 			};
 		};
 		return boardGame;
@@ -105,24 +108,30 @@ function CreatorGame (percentageOfBombs){
 			if (boardGame[i][j].bomb)
 				return 1;
 		}
-    	return 0;
-    }
+		return 0;
+	}
 
 	this.buildBoardGame =  function(){
 		createArrayWithShuffle();
 		return getBoardGame();
 	}
 }	
-																	
+
 function Game (boardGame) {
 	this.boardGame = boardGame;
 
+	var clear =  function (){
+		var gameDiv = document.getElementById('game');
+		gameDiv.innerHTML = "";
+	}
+
 	this.show =  function (){
+		clear();
 		for (var i = 0; i < this.boardGame.length; i++) {
 			for (var j = 0; j < this.boardGame[i].length; j++) {
-				 createImageElementAndAddOnclick(boardGame[i][j]);
+				createImageElementAndAddOnclick(boardGame[i][j]);
 			}
-		    addBreakLine();
+			addBreakLine();
 		}
 	}
 
@@ -150,11 +159,11 @@ function Game (boardGame) {
 			}
 		}(block);
 	}
-    
-    var isValidPosition =  function (i,j){
-    	return this.boardGame[i][i] != null;
-    }
-	
+
+	var isValidPosition =  function (i,j){
+		return boardGame[i][j] != null;
+	}
+
 	var changeImageOfBoardGameIfPositionIsValid = function (i,j){
 		if (isValidPosition(i,j)){
 			boardGame[i][j].changeImage();
@@ -174,6 +183,17 @@ function Game (boardGame) {
 		changeImageOfBoardGameIfPositionIsValid(i+1,j+1);
 	}
 }
+function GameController (){
 
-var boardGame = new CreatorGame(0.15).buildBoardGame()
-new Game(boardGame).show();
+}
+
+var LEVEL_EASY = 0.15;
+var LEVEL_MEDIUM = 0.50;
+var LEVEL_HARD = 1.0;
+
+GameController.createGame  =  function (level){
+	var boardGame = new CreatorGame(level).buildBoardGame()
+	var game =  new Game(boardGame);
+	game.show();
+	alert("Jogo iniciado ,clique em ok para continuar...");
+}
