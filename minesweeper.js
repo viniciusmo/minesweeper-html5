@@ -1,3 +1,6 @@
+var SOURCE_IMAGES = "images/";
+
+
 function CollectionUtils(){}
 CollectionUtils.shuffle  =  function (o){
 	for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
@@ -9,6 +12,14 @@ function Block (clickable,position,bomb){
 	this.position = position;
 	this.bomb = bomb;
 	this.html;
+
+	this.changeImage =  function (){
+		if (bomb){
+			this.html.setAttribute('src',SOURCE_IMAGES+'bomb.jpg');
+		}else{
+			this.html.setAttribute('src',SOURCE_IMAGES+'clear.png');
+		}
+	}
 }
 
 function Position (i,j){
@@ -58,9 +69,8 @@ function CreatorGame (percentageOfBombs){
 		return getBoardGame();
 	}
 }	
-
+																	
 function Game (boardGame) {
-	var SOURCE_IMAGES = 'images/'
 	this.boardGame = boardGame;
 
 	this.show =  function (){
@@ -91,10 +101,60 @@ function Game (boardGame) {
 					block.html.setAttribute('src',SOURCE_IMAGES+'bomb.jpg');
 				}else{
 					block.html.setAttribute('src',SOURCE_IMAGES+'clear.png');
+					showBlocksAroundPosition(block);
 				}
 			}
 		}(block);
 	}
+    
+    var isValidPosition =  function (i,j){
+    	return this.boardGame[i][i] != null;
+    }
+
+	var showBlocksAroundPosition =  function (block){
+		var i = block.position.i;
+		var j = block.position.j;
+
+		if (isValidPosition(i-1,j-1) ){
+			boardGame[i-1][j-1].changeImage();
+		}
+
+		if (isValidPosition(i-1,j) ){
+			boardGame[i-1][j].changeImage();
+
+		}
+
+		if (isValidPosition(i-1,j+1) ){
+			boardGame[i-1][j+1].changeImage();
+
+		}
+
+		if (isValidPosition(i,j-1) ){
+			boardGame[i][j-1].changeImage();
+
+		}
+
+		if (isValidPosition(i,j+1) ){
+			boardGame[i][j+1].changeImage();
+
+		}
+
+		if (isValidPosition(i+1,j-1) ){
+			boardGame[i+1][j-1].changeImage();
+
+
+		}
+		if (isValidPosition(i+1,j) ){
+			boardGame[i+1][j].changeImage();
+
+
+		}
+		if (isValidPosition(i+1,j+1) ){
+			boardGame[i+1][j+1].changeImage();
+
+		}
+	}
+
 
 }
 
