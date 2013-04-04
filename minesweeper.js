@@ -12,10 +12,17 @@ function Block (clickable,position,bomb){
 	this.position = position;
 	this.bomb = bomb;
 	this.html;
+	this.totalBombs;
+
+	this.bombs =  function (total){
+		this.totalBombs = total;
+	}
 
 	this.changeImage =  function (){
 		if (bomb){
 			this.html.setAttribute('src',SOURCE_IMAGES+'bomb.jpg');
+		}else if (this.totalBombs > 0){
+			this.html.setAttribute('src',SOURCE_IMAGES+this.totalBombs+'.png');
 		}else{
 			this.html.setAttribute('src',SOURCE_IMAGES+'clear.png');
 		}
@@ -52,17 +59,54 @@ function CreatorGame (percentageOfBombs){
 	}
 
 	var getBoardGame =  function (){
+		var boardGame = createBoardGame();
+		boardGame = countBombsAroundBlocks(boardGame);
+		return boardGame;
+	}
+
+	var createBoardGame =  function (){
 		var boardGame = new Array();
 		var countBoardItem = 0;
-
 		for (var i = 0; i < LINES; i++) {
 			boardGame[i] = new Array();
 			for (var j = 0; j < COLS; j++) {
-				 boardGame[i][j]  = new Block (false,new Position(i,j),this.mat[countBoardItem++])
+				 var block  = new Block (false,new Position(i,j),this.mat[countBoardItem++])
+				 boardGame[i][j] = block;
 			}
 		}
 		return boardGame;
 	}
+
+	var countBombsAroundBlocks = function (boardGame){
+		for (var i = 0; i < LINES ; i++) {
+			for (var j = 0; j < COLS; j++) {
+				 var block = boardGame[i][j];
+				 block.bombs ( countBombsAroundOfBlock(boardGame,i,j) );
+			};
+		};
+		return boardGame;
+	}
+
+	var countBombsAroundOfBlock = function (boardGame,i,j){
+		var total = 0;
+		total += isBombPosition(boardGame,i-1,j-1);
+		total += isBombPosition(boardGame,i-1,j);
+		total += isBombPosition(boardGame,i-1,j+1);
+		total += isBombPosition(boardGame,i,j-1);
+		total += isBombPosition(boardGame,i,j+1);
+		total += isBombPosition(boardGame,i+1,j-1);
+		total += isBombPosition(boardGame,i+1,j);
+		total += isBombPosition(boardGame,i+1,j+1);
+		return total;
+	}
+
+	var isBombPosition =  function (boardGame,i,j){
+		if (boardGame[i]!= undefined && boardGame[i][j] != undefined){
+			if (boardGame[i][j].bomb)
+				return 1;
+		}
+    	return 0;
+    }
 
 	this.buildBoardGame =  function(){
 		createArrayWithShuffle();
@@ -110,52 +154,25 @@ function Game (boardGame) {
     var isValidPosition =  function (i,j){
     	return this.boardGame[i][i] != null;
     }
+	
+	var changeImageOfBoardGameIfPositionIsValid = function (i,j){
+		if (isValidPosition(i,j)){
+			boardGame[i][j].changeImage();
+		}
+	}
 
 	var showBlocksAroundPosition =  function (block){
 		var i = block.position.i;
 		var j = block.position.j;
-
-		if (isValidPosition(i-1,j-1) ){
-			boardGame[i-1][j-1].changeImage();
-		}
-
-		if (isValidPosition(i-1,j) ){
-			boardGame[i-1][j].changeImage();
-
-		}
-
-		if (isValidPosition(i-1,j+1) ){
-			boardGame[i-1][j+1].changeImage();
-
-		}
-
-		if (isValidPosition(i,j-1) ){
-			boardGame[i][j-1].changeImage();
-
-		}
-
-		if (isValidPosition(i,j+1) ){
-			boardGame[i][j+1].changeImage();
-
-		}
-
-		if (isValidPosition(i+1,j-1) ){
-			boardGame[i+1][j-1].changeImage();
-
-
-		}
-		if (isValidPosition(i+1,j) ){
-			boardGame[i+1][j].changeImage();
-
-
-		}
-		if (isValidPosition(i+1,j+1) ){
-			boardGame[i+1][j+1].changeImage();
-
-		}
+		changeImageOfBoardGameIfPositionIsValid(i-1,j-1);
+		changeImageOfBoardGameIfPositionIsValid(i-1,j);
+		changeImageOfBoardGameIfPositionIsValid(i-1,j+1);
+		changeImageOfBoardGameIfPositionIsValid(i,j-1);
+		changeImageOfBoardGameIfPositionIsValid(i,j+1);
+		changeImageOfBoardGameIfPositionIsValid(i+1,j-1);
+		changeImageOfBoardGameIfPositionIsValid(i+1,j);
+		changeImageOfBoardGameIfPositionIsValid(i+1,j+1);
 	}
-
-
 }
 
 var boardGame = new CreatorGame(0.15).buildBoardGame()
