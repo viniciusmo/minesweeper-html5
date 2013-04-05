@@ -1,5 +1,6 @@
 var SOURCE_IMAGES = "images/";
-
+var contextElement = document.getElementById("game");
+var context = contextElement.getContext("2d");
 
 function CollectionUtils(){}
 CollectionUtils.shuffle  =  function (o){
@@ -18,6 +19,11 @@ function Block (clickable,position,bomb){
 		this.totalBombs = total;
 	}
 
+	this.onclick  =  function (){
+
+
+	}
+	
 	this.changeImage =  function (){
 		if (clickable){
 			clickable = false;
@@ -120,19 +126,17 @@ function CreatorGame (percentageOfBombs){
 function Game (boardGame) {
 	this.boardGame = boardGame;
 
-	var clear =  function (){
-		var gameDiv = document.getElementById('game');
-		gameDiv.innerHTML = "";
-	}
-
 	this.show =  function (){
-		clear();
 		for (var i = 0; i < this.boardGame.length; i++) {
 			for (var j = 0; j < this.boardGame[i].length; j++) {
 				createImageElementAndAddOnclick(boardGame[i][j]);
 			}
 			addBreakLine();
 		}
+	}
+
+	this.onclick  =  function (x,y){
+		alert(x+y);
 	}
 
 	var addBreakLine = function (){
@@ -192,8 +196,13 @@ var LEVEL_MEDIUM = 0.50;
 var LEVEL_HARD = 1.0;
 
 GameController.createGame  =  function (level){
-	var boardGame = new CreatorGame(level).buildBoardGame()
-	var game =  new Game(boardGame);
-	game.show();
-	alert("Jogo iniciado ,clique em ok para continuar...");
+	this.boardGame =  new CreatorGame(level).buildBoardGame()
+	this.game =  new Game(this.boardGame);
+	this.game.show();
+}
+
+GameController.onclick  =  function (event){
+	var x = event.pageX-contextElement.offsetLeft;
+	var y = event.pageY-contextElement.offsetTop;
+	this.game.onclick(x,y);
 }
