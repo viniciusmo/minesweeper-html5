@@ -273,6 +273,7 @@
 			this.game.show();
 			document.getElementById('body_controls').style["display"] = "block";
 			document.getElementById('score').style["display"] = "none";
+			document.getElementById('body_controls').innerHTML = "0";
 			alert("Jogo iniciado");
 		}
 
