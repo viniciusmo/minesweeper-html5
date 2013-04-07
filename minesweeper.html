@@ -7,12 +7,23 @@
 <body onload="GameController.createGame(LEVEL_EASY)">
 	<div id="main">
 		<div id="controls">
-			<a href="#" class="button_theme_blue">Ranking</a>
-			<a href="#" onclick="GameController.createGame(LEVEL_EASY)" class="button_theme_default">Easy</a>
-			<a href="#" onclick="GameController.createGame(LEVEL_MEDIUM)" class="button_theme_default">Medium</a>
-			<a href="#" onclick="GameController.createGame(LEVEL_HARD)" class="button_theme_default">Hard</a>
+			<div id="top_controls" style="margin:10px 0 0 50px;">
+			<a href="#" onclick="new Ranking().show()" class="button_blue">Ranking</a>
+			<a href="#" onclick="GameController.createGame(LEVEL_EASY)" class="button_default">Easy</a>
+			<a href="#" onclick="GameController.createGame(LEVEL_MEDIUM)" class="button_default">Medium</a>
+			<a href="#" onclick="GameController.createGame(LEVEL_HARD)" class="button_default">Hard</a>
+			</div>
+			<div id="body_controls"  style="margin:150px 0 0 200px;font-size: 172px;display:none">
+					0
+			</div>
+			<div id="score" >
+               	
+            </div>
+           
 		</div>
-		<canvas id="game" onclick="GameController.onclick(event)"></canvas>
+		<div  id="game_container">
+				<canvas id="game" onclick="GameController.onclick(event)"></canvas>
+		</div>
 	</div>
 </body>
 <script src="minesweeper.js" type="text/javascript"></script>
