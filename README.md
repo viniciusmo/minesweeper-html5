@@ -8,6 +8,8 @@ Campo minado apresentado a disciplina de Jogos Digitais para WEB - Fatec Carapic
 
   [1]: https://raw.github.com/viniciusmo/octopress/master/source/images/blog/opensource/campo_minado.png
 
+## Demo
+
 Demo : [Clique aqui](http://viniciusmo.github.io/games/minesweeper-html5/minesweeper.html "Clique aqui")
 
 ## License
