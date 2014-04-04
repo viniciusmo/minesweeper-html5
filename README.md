@@ -3,7 +3,10 @@ minesweeper-html5
 
 Campo minado apresentado a disciplina de Jogos Digitais para WEB - Fatec Carapicuíba com três niveis diferentes.  
 
-{% img center https://raw.github.com/viniciusmo/octopress/master/source/images/blog/opensource/campo_minado.png%}
+![Print][1]
+
+
+  [1]: https://raw.github.com/viniciusmo/octopress/master/source/images/blog/opensource/campo_minado.png
 
 Demo : [Clique aqui](http://viniciusmo.github.io/games/minesweeper-html5/minesweeper.html "Clique aqui")
 
